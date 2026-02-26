@@ -14,14 +14,24 @@ This will be the first in a two part series.
 
 So this might not all make sense now, but as you deploy the stack the diagram will come clear.
 
-**... Note**, this Blog got a life of it's own, and well, got just a ...bit.. bigger than originally planned, but honestly don't mind, it's actually been a idea of me for some time. [vCluster](https://github.com/loft-sh/vcluster)  gave me the environment to do it in.
+**... Note**, this Blog developed a life of it's own, and well, got just a ...bit.. bigger than originally planned, but honestly don't mind, it's actually been a idea of mine for some time. [vCluster](https://github.com/loft-sh/vcluster) gave me the environment to do it all in now. Smilling!!!
 
-The project deploys multiple components making up a Observability stack, Prometheus, Grafana, Thanos for Federation, RustFS as Object store for Thanos, Traefik as Application Proxy. 
+The project deploys multiple components required for an Observability stack, Prometheus, Grafana, Thanos for Federation, RustFS as Object store for Thanos, Traefik as Application Proxy. 
 
-We also ended having 2 inbound routes, Everything and RustFS (There are some hard coded values in the RustFS stack that stops us from using a path routing like what we will be doing for the other components).
+We also ended having 2 inbound routes (wanted one...), first route via port 8080/<path> for everything (except =>) RustFS, it had to be different, it lives on :9001/rustfs. (There are some hard coded values in the RustFS stack that stops us from using a path routing like what we doing for the other components). 
+
+Paths are:
+
+- :8080/prometheus
+- :8080/thanos
+- :8080/alertmanager
+- :8080/grafana 
+- :9001/rustfs
+ 
+more about this in the local README.md's.
 
 Then we have three applications, all doing exactly the same, just in three languages, generating Prometheus metrics to be scraped.
-The apps also expose logs, but that is for another day -> ;) -> Part 2...
+The apps also expose logs, but that is for another day -> ;) -> **Part 2**...
 
 Looking at what we have already, and whats planned with Part 2 it does provide a developer with a pretty complete development environment, with some good examples also.
 
