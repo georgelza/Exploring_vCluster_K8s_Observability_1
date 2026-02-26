@@ -1,16 +1,14 @@
-# python-prometheus-demo
+## Python based prometheus-demo 
 
 A lightweight Python app that generates Prometheus metrics and structured JSON logs.
 Built as a learning/demo workload — runs in Kubernetes, scrapes cleanly into Prometheus and Grafana.
 
----
 
 ## What it does
 
 Runs a continuous loop that sleeps for a random interval, then updates a set of Prometheus metrics.
 All behaviour is driven by a ConfigMap — no code changes needed to tune it.
 
----
 
 ## Metrics exposed on `:8000/metrics`
 
@@ -23,7 +21,6 @@ All behaviour is driven by a ConfigMap — no code changes needed to tune it.
 | `loop_duration_seconds` | Summary | Elapsed time per loop — exposes `_count` and `_sum` |
 | `loop_execution_seconds` | Histogram | Elapsed time per loop across 5 buckets: 1s, 2s, 3s, 4s, 5s |
 
----
 
 ## Configuration (ConfigMap)
 
@@ -35,23 +32,22 @@ All behaviour is driven by a ConfigMap — no code changes needed to tune it.
 | `MAX_RUN` | `` (empty) | Cap on total iterations. Empty = run forever |
 | `METRICS_PORT` | `8000` | Port the Prometheus scrape endpoint listens on |
 
----
 
 ## Structured logs
 
 Every line is JSON with a fixed column order:
 
 ```
-app | level | ts | event | <fields>
+app | module | level | ts | event | <fields>
 ```
 
 ```json
-{"app": "python-prometheus-demo", "level": "INFO", "ts": "2025-01-01T10:00:00Z", "event": "startup", "sleep_min": 1.0, "sleep_max": 5.0, "max_run": "unlimited"}
-{"app": "python-prometheus-demo", "level": "INFO", "ts": "2025-01-01T10:00:04Z", "event": "loop_tick", "current_run": 1, "max_run": "unlimited", "pct_complete": "n/a", "total_execution_time_s": 3.81, "loop_execution_time_s": 3.79, "sleep_s": 3.74, "random_number": 6}
-{"app": "python-prometheus-demo", "level": "INFO", "ts": "2025-01-01T10:00:07Z", "event": "max_run_reached", "max_run": 20, "current_run": 20, "total_execution_time_s": 58.3}
-```
+{"app": "python-prometheus-demo", "module":"main", "level": "INFO", "ts": "2025-01-01T10:00:00Z", "event": "startup", "sleep_min": 1.0, "sleep_max": 5.0, "max_run": "unlimited"}
 
----
+{"app": "python-prometheus-demo", "module":"main", "level": "INFO", "ts": "2025-01-01T10:00:04Z", "event": "loop_tick", "current_run": 1, "max_run": "unlimited", "pct_complete": "n/a", "total_execution_time_s": 3.81, "loop_execution_time_s": 3.79, "sleep_s": 3.74, "random_number": 6}
+
+{"app": "python-prometheus-demo", "module":"main", "level": "INFO", "ts": "2025-01-01T10:00:07Z", "event": "max_run_reached", "max_run": 20, "current_run": 20, "total_execution_time_s": 58.3}
+```
 
 ## Running locally (Docker)
 
@@ -62,8 +58,6 @@ make run SLEEP_MIN=2 SLEEP_MAX=8
 make logs                       # tail output
 make stop                       # stop and remove container
 ```
-
----
 
 ## Deploying to Kubernetes
 
@@ -82,8 +76,6 @@ kubectl apply -f k8s-deploy/01-configmap.yaml
 kubectl rollout restart deployment/python-prometheus-demo -n prometheus-demo
 ```
 
----
-
 ## Prometheus scrape
 
 The pod and service carry standard annotations picked up by the `kubernetes-pods` scrape job:
@@ -97,3 +89,34 @@ prometheus.io/scheme: "http"
 
 If you are running **kube-prometheus-stack**, apply `04-servicemonitor.yaml` and set the
 `release:` label to match your Helm release name.
+
+
+## Grafana dashboard
+
+Import `../dashboard/dashboard.json` into Grafana and select the Thanos datasource when prompted. Identical panel structure to the Python and Go versions, filtered to `app_kubernetes_io_name="python-prometheus-demo"`.
+
+
+## Project structure
+
+```
+PythonApp/app-build/
+    |
+    ├── app.py
+    ├── requirements.txt
+    ├── Dockerfile
+    ├── Makefile
+    ├── .env.example
+    ├── README.md
+    |
+PythonApp/dashboard/
+    |
+    ├── dashboard.json
+    |
+PythonApp/k8s-deploy/
+    |
+    ├── 01-configmap.yaml
+    ├── 02-deployment.yaml
+    ├── 03-service.yaml
+    ├── 04-servicemonitor.yaml
+    └── README.md
+```

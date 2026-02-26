@@ -1,16 +1,5 @@
 # python-prometheus-demo – Kubernetes Manifest Pack
 
-```
-k8s-deploy/
-├── 00-namespace.yaml       Dedicated namespace
-├── 01-configmap.yaml       All runtime config (APP_NAME, SLEEP_MIN/MAX, MAX_RUN …)
-├── 02-deployment.yaml      App pod with Prometheus scrape annotations + probes
-├── 03-service.yaml         ClusterIP Service exposing :8000/metrics
-└── 04-servicemonitor.yaml  Prometheus Operator ServiceMonitor (optional)
-```
-
----
-
 ## Quick start
 
 ```bash
@@ -118,4 +107,16 @@ Then update the label in `04-servicemonitor.yaml`:
 ```yaml
 labels:
   release: <your-helm-release-name>
+```
+
+## Project structure
+
+```
+k8s-deploy/
+  ├── 00-namespace.yaml       Dedicated namespace
+  ├── 01-configmap.yaml       All runtime config (APP_NAME, SLEEP_MIN/MAX, MAX_RUN …)
+  ├── 02-deployment.yaml      App pod with Prometheus scrape annotations + probes
+  ├── 03-service.yaml         ClusterIP Service exposing :8000/metrics
+  ├── 04-servicemonitor.yaml  Prometheus Operator ServiceMonitor (optional)
+  └── README.md
 ```

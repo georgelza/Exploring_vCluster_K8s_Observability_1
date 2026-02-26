@@ -45,14 +45,15 @@ By using a ClusterIP it allows us to run one kubectl port-forward onto the clust
 
 ## STEP 4: Deploy our Monitoring Stack.
 
-So I'm using Manifest files on purpose, it's easier to read and easier to follow how things are are plugged together.
-Nothing stopping you from doing the below using one of the various HELM deploy guides. 
+So I'm using [Manifest](https://en.wikipedia.org/wiki/Manifest_file) files on purpose, it's easier to read and easier to follow how things are are plugged together.
 
-NOTE: Traefik was deployed at the cluster build using HELM chart.
+Nothing stopping you from doing the below using one of the various [HELM](https://helm.sh) deploy guides. I actually include some references in `monitoring/README.md `for deploying the stack using HELM chart deployment option.
 
-Next See: **monitoring/README.md** for detail.
+NOTE: [Traefik](https://traefik.io/traefik) was deployed at the cluster build using an [HELM](https://helm.sh) chart.
 
+Next See: **monitoring/README.md** for more detail.
 
+```
 ├── deploy.sh
 ├── teardown.sh
 ├── namespaces.yaml
@@ -110,6 +111,7 @@ Next See: **monitoring/README.md** for detail.
 │   └── README.md
 |
 └── traefik-ingress/
-│   ├── 1.traefik-deploy.yaml
+    ├── 1.traefik-deploy.yaml
     ├── 2.traefik-deploy-services.yaml
     └── README.md
+```

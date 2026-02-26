@@ -2,43 +2,53 @@
 
 Welcome to [The Rabbit Hole](https://medium.com/@georgelza/list/the-rabbit-hole-0df8e3155e33)
 
-The idea, deploy a Observability stack on our K8S cluster hosted on our vCluster environment.
+The idea, deploy a Observability stack on our [K8s](https://kubernetes.io/) cluster hosted on our [vCluster](https://github.com/loft-sh/vcluster) environment.
 
 This will be the first in a two part series. 
 
-- Part 1 being the deployment of our base Monitoring stack comprised out of: Prometheus, Grafana and Thanos, with RustFS as backing object storage for Thanos, and 
+- **Part 1** being the deployment of our base Monitoring stack comprised out of: [Prometheus](https://prometheus.io), [Grafana](https://grafana.com) and [Thanos](https://thanos.io), with [RustFS](https://rustfs.com) as backing object storage for Thanos, fronted by [Traefik](https://traefik.io/traefik) as Application Proxy and,
 
-- Part 2 in which we will be expanding our stack to include Log Analytics capabilities via [ElasticSearch](https://www.elastic.co).
+- **Part 2** in which we will be expanding our stack to include Log Analytics capabilities via [ElasticSearch](https://www.elastic.co).
 
-As mentioned above, I'm using RustFS as object store, instead of MinIO, well because MinIO decided to walk away from everything thats open source, community driven and Apache foundation values based. Time to find another Object store... so here we go.
+As mentioned above, I'm using [RustFS](https://rustfs.com) as object store, instead of MinIO, well because MinIO decided to walk away from everything thats open source, community driven and [Apache Foundation](https://www.apache.org) values based. 
+
+Time to find another Object Store... so here we go.
 
 
 BLOG: [Exploring K8S on vCluster, Deploying a Observability stack](???)
 
 GIT: [Exploring_vCluster_K8s_Observability_1](https://github.com/georgelza/Exploring_vCluster_K8s_Observability_1.git)
 
-This Blog follows two previous blogs where we introduced [vCluster](https://github.com/loft-sh/vcluster) as a base for localised Kubernetes environment.
+This Blog follows two previous blogs where we introduced [vCluster](https://github.com/loft-sh/vcluster) as a base for localised [Kubernetes](https://kubernetes.io/) environment.
 
 See: 
 
-- [How to: Web apps on Kubernetes deployed on vCluster, configured with Traefik App Proxy and Ingress Controllers](https://medium.com/@georgelza/how-to-web-apps-on-kubernetes-deployed-on-vcluster-configured-with-traefik-app-proxy-and-ingress-c79cfea7111c)
+1. [Exploring vCluster as solution to running K8S locally inside Docker](https://medium.com/@georgelza/exploring-vcluster-as-solution-to-running-k8s-locally-inside-docker-6ea233c67726)
+  
+2. [How to: Web apps on Kubernetes deployed on vCluster, configured with Traefik App Proxy and Ingress Controllers](https://medium.com/@georgelza/how-to-web-apps-on-kubernetes-deployed-on-vcluster-configured-with-traefik-app-proxy-and-ingress-c79cfea7111c)
 
-- [Exploring vCluster as solution to running K8S locally inside Docker](https://medium.com/@georgelza/exploring-vcluster-as-solution-to-running-k8s-locally-inside-docker-6ea233c67726)
 
-
-We'll be using the same vCluster & Kubernetes cluster deployment as per previous Blogs.
+We'll be using the same [vCluster](https://github.com/loft-sh/vcluster) & [Kubernetes](https://kubernetes.io/) cluster deployment as per previous Blogs.
 
 
 ## Deployment and Building Our Examples
 
 We have this **README.md** files, covering the overview and then **Deploy.md** covering the high level deployment. The more detail regarding our deployment of our monitoring stacks is covered in **README.md** files located in each of the subdirectories under the `monitoring/*` directory.
 
+We also have three [Prometheus](https://prometheus.io) metric data generators in the form of [Python](https://www.python.org), [Java](https://www.java.com/en/) and [Golang](https://go.dev) applications, in addition to [Grafana](https://grafana.com) dashboards to visualize the generated metrics. 
 
-Next See `Deploy.md` - Which will go into a bit more detail how to deploy the stack.
+See: `monitoring/Apps/README.md`,
 
 
+Next See: `Deploy.md` - Which will go into a bit more detail on how to deploy the entire stack.
 
-## vCluster Project Pages
+
+## Summary
+
+No Application, System, solution, however you want to name it, frame it should ever be deployed without a end to end Observability stack, Observability being metrics and logs. You don't know what good and bad looks likes with proper metrics and logs. Observability is also critical when it comes to "FinOps" in that it defines if your system is over sized, it's also instrumental in predictive sizing, which leads to budgeting.
+
+
+### vCluster Project Pages
 
 - [vCluster](https://github.com/loft-sh/vcluster)
 
@@ -49,22 +59,24 @@ Next See `Deploy.md` - Which will go into a bit more detail how to deploy the st
 - [VIND](https://github.com/loft-sh/vind)
 
 
-## Supporting Background Information
+### Supporting Background Information
 
 - [Prometheus](https://prometheus.io)
 - [Grafana](https://grafana.com)
 - [Thanos](https://thanos.io)
 - [RustFS](https://rustfs.com)
 - [Traefik](https://traefik.io/traefik)
+- [Kubernetes](https://kubernetes.io/)
 
 
 ## THE END
 
-And like that we’re done with our little trip down another Rabbit Hole, Till next time.
+And like that we’re done with our little trip down another Rabbit Hole, Till next time. 
 
 Thanks for following. 
 
-Whats next… Hmm, thinking of maybe taking this stack and adding some Log Analytics... [Elastic](https://www.elastic.co)
+Whats next… Hmm, lets see, as per above, Part 2, lets take this stack a little further and add some Log Analytics capability by way of [Elastic](https://www.elastic.co).
+
 
 ### The Rabbit Hole
 
