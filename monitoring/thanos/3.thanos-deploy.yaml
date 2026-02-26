@@ -1,0 +1,187 @@
+---
+# ── Thanos Query (Query Frontend / Fan-out) ────────────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thanos-query
+  namespace: monitoring
+  labels:
+    app: thanos-query
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: thanos-query
+  template:
+    metadata:
+      labels:
+        app: thanos-query
+    spec:
+      containers:
+        - name: thanos-query
+          image: quay.io/thanos/thanos:v0.35.0
+          args:
+            - query
+            - --log.level=info
+            - --http-address=0.0.0.0:9090
+            - --grpc-address=0.0.0.0:10901
+            - --query.replica-label=prometheus_replica
+            # Sidecar gRPC endpoint
+            - --web.external-prefix=/thanos
+            - --web.prefix-header=X-Forwarded-Prefix
+            - --endpoint=prometheus-service.monitoring.svc.cluster.local:10901
+            # Store Gateway gRPC endpoint (historical data from RustFS)
+            - --endpoint=thanos-store-gateway.monitoring.svc.cluster.local:10901
+          ports:
+            - name: http
+              containerPort: 9090
+            - name: grpc
+              containerPort: 10901
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: thanos-query
+  namespace: monitoring
+spec:
+  selector:
+    app: thanos-query
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 9090
+      targetPort: 9090
+    - name: grpc
+      port: 10901
+      targetPort: 10901
+---
+# ── Thanos Store Gateway (reads historical blocks from RustFS/S3) ──────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thanos-store-gateway
+  namespace: monitoring
+  labels:
+    app: thanos-store-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: thanos-store-gateway
+  template:
+    metadata:
+      labels:
+        app: thanos-store-gateway
+    spec:
+      containers:
+        - name: thanos-store-gateway
+          image: quay.io/thanos/thanos:v0.35.0
+          args:
+            - store
+            - --log.level=info
+            - --data-dir=/thanos/store
+            - --objstore.config-file=/etc/thanos/objstore.yml
+            - --http-address=0.0.0.0:10902
+            - --grpc-address=0.0.0.0:10901
+          ports:
+            - name: http
+              containerPort: 10902
+            - name: grpc
+              containerPort: 10901
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 1Gi
+          volumeMounts:
+            - name: thanos-objstore-config
+              mountPath: /etc/thanos/
+              readOnly: true
+            - name: thanos-store-data
+              mountPath: /thanos/store
+      volumes:
+        - name: thanos-objstore-config
+          configMap:
+            name: thanos-objstore-config
+        - name: thanos-store-data
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: thanos-store-gateway
+  namespace: monitoring
+spec:
+  selector:
+    app: thanos-store-gateway
+  type: ClusterIP
+  ports:
+    - name: grpc
+      port: 10901
+      targetPort: 10901
+    - name: http
+      port: 10902
+      targetPort: 10902
+---
+# ── Thanos Compactor (downsamples & compacts blocks in RustFS) ────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thanos-compactor
+  namespace: monitoring
+  labels:
+    app: thanos-compactor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: thanos-compactor
+  template:
+    metadata:
+      labels:
+        app: thanos-compactor
+    spec:
+      containers:
+        - name: thanos-compactor
+          image: quay.io/thanos/thanos:v0.35.0
+          args:
+            - compact
+            - --log.level=info
+            - --data-dir=/thanos/compact
+            - --objstore.config-file=/etc/thanos/objstore.yml
+            - --http-address=0.0.0.0:10902
+            - --wait
+            - --retention.resolution-raw=30d
+            - --retention.resolution-5m=90d
+            - --retention.resolution-1h=365d
+          ports:
+            - name: http
+              containerPort: 10902
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 1Gi
+          volumeMounts:
+            - name: thanos-objstore-config
+              mountPath: /etc/thanos/
+              readOnly: true
+            - name: thanos-compact-data
+              mountPath: /thanos/compact
+      volumes:
+        - name: thanos-objstore-config
+          configMap:
+            name: thanos-objstore-config
+        - name: thanos-compact-data
+          emptyDir: {}

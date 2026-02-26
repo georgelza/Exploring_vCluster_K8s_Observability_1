@@ -1,0 +1,109 @@
+# ── Node Exporter DaemonSet ────────────────────────────────────────────────────
+# Runs on every node in the cluster (including control-plane).
+# Exposes host-level metrics: CPU, memory, disk, network, filesystem.
+# Prometheus scrapes it via the kubernetes-pods job (annotation-based discovery).
+#
+# Metrics available at: http://<node-ip>:9100/metrics
+# Scraped automatically by Prometheus via pod annotations.
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: node-exporter
+  namespace: monitoring
+  labels:
+    app: node-exporter
+spec:
+  selector:
+    matchLabels:
+      app: node-exporter
+  template:
+    metadata:
+      labels:
+        app: node-exporter
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9100"
+        prometheus.io/path: "/metrics"
+    spec:
+      # Run on every node including control-plane
+      tolerations:
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
+          effect: NoSchedule
+        - key: node-role.kubernetes.io/master
+          operator: Exists
+          effect: NoSchedule
+      hostNetwork: true      # Use host network so metrics reflect the actual node
+      hostPID: true          # Access host process info
+      hostIPC: true          # Access host IPC namespace
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534     # nobody
+      containers:
+        - name: node-exporter
+          image: prom/node-exporter:v1.8.2
+          args:
+            - --path.sysfs=/host/sys
+            - --path.rootfs=/host/root
+            - --path.procfs=/host/proc
+            - --no-collector.wifi
+            - --no-collector.hwmon
+            - --collector.filesystem.mount-points-exclude=^/(dev|proc|sys|var/lib/docker/.+|var/lib/kubelet/pods/.+)($|/)
+          ports:
+            - name: metrics
+              containerPort: 9100
+              hostPort: 9100
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - name: sys
+              mountPath: /host/sys
+              mountPropagation: HostToContainer
+              readOnly: true
+            - name: root
+              mountPath: /host/root
+              mountPropagation: HostToContainer
+              readOnly: true
+            - name: proc
+              mountPath: /host/proc
+              mountPropagation: HostToContainer
+              readOnly: true
+      volumes:
+        - name: sys
+          hostPath:
+            path: /sys
+        - name: root
+          hostPath:
+            path: /
+        - name: proc
+          hostPath:
+            path: /proc
+---
+# Service for node-exporter (optional — Prometheus uses pod discovery, not this)
+# Included for convenience if you want to query a specific node directly
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-exporter
+  namespace: monitoring
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "9100"
+spec:
+  selector:
+    app: node-exporter
+  clusterIP: None   # Headless — one endpoint per node
+  ports:
+    - name: metrics
+      port: 9100
+      targetPort: 9100

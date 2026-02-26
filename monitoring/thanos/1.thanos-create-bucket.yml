@@ -1,0 +1,25 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-thanos-bucket
+  namespace: data
+spec:
+  ttlSecondsAfterFinished: 120
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: mc
+          image: minio/mc:latest
+          command:
+            - /bin/sh
+            - -c
+            - |
+              mc alias set rustfs http://rustfs-service.data.svc.cluster.local:9000 rustadmin rustadmin && \
+              mc mb --ignore-existing rustfs/thanos && \
+              echo "✓ Bucket 'thanos' ready" && \
+              mc ls rustfs
+          env:
+            - name: MC_HOST_rustfs
+              value: "http://rustadmin:rustadmin@rustfs-service.data.svc.cluster.local:9000"

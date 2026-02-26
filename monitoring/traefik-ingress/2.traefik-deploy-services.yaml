@@ -1,0 +1,106 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Traefik Ingress for monitoring stack
+# Namespace: ingress-traefik1
+#
+# Entrypoints:
+#   web     :8000 (container) / :80 (service)   → /prometheus, /grafana, /alertmanager, /thanos
+#     kubectl port-forward service/traefik1 -n ingress-traefik1 8080:80
+#
+#   rustfs  :9001 (container) / :9001 (service) → rustfs console UI (served at root)
+#     kubectl port-forward service/traefik1 -n ingress-traefik1 9001:9001
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── Strip-prefix middlewares ──────────────────────────────────────────────────
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: strip-alertmanager
+  namespace: ingress-traefik1
+spec:
+  stripPrefix:
+    prefixes:
+      - /alertmanager
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: strip-rustfs
+  namespace: ingress-traefik1
+spec:
+  stripPrefix:
+    prefixes:
+      - /rustfs
+---
+# ── Main IngressRoute (entrypoint: web / port 80) ────────────────────────────
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: monitoring-ingress
+  namespace: ingress-traefik1
+spec:
+  entryPoints:
+    - web
+  routes:
+    # ── Prometheus ────────────────────────────────────────────────────────────
+    - match: PathPrefix(`/prometheus`)
+      kind: Rule
+      services:
+        - name: prometheus-service
+          namespace: monitoring
+          port: 9090
+
+    # ── Grafana ───────────────────────────────────────────────────────────────
+    - match: PathPrefix(`/grafana`)
+      kind: Rule
+      services:
+        - name: grafana
+          namespace: monitoring
+          port: 3000
+
+    # ── Alertmanager ──────────────────────────────────────────────────────────
+    - match: PathPrefix(`/alertmanager`)
+      kind: Rule
+      middlewares:
+        - name: strip-alertmanager
+          namespace: ingress-traefik1
+      services:
+        - name: alertmanager
+          namespace: monitoring
+          port: 9093
+
+    # ── Thanos Query ──────────────────────────────────────────────────────────
+    - match: PathPrefix(`/thanos`)
+      kind: Rule
+      services:
+        - name: thanos-query
+          namespace: monitoring
+          port: 9090
+
+    # ── RustFS S3 API ─────────────────────────────────────────────────────────
+    - match: PathPrefix(`/rustfs`)
+      kind: Rule
+      middlewares:
+        - name: strip-rustfs
+          namespace: ingress-traefik1
+      services:
+        - name: rustfs-service
+          namespace: data
+          port: 9000
+---
+# ── RustFS Console IngressRoute (entrypoint: rustfs-console / port 9001) ─────
+# Served at root so Next.js cookie paths and asset URLs work correctly
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: rustfs-console-ingress
+  namespace: ingress-traefik1
+spec:
+  entryPoints:
+    - rustfs-console
+  routes:
+    - match: PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: rustfs-service
+          namespace: data
+          port: 9001

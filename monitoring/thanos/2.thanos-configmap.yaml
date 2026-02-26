@@ -1,0 +1,20 @@
+# ── Thanos Object Store Config (shared by sidecar, store gateway, compactor) ──
+# Edit access_key/secret_key if RustFS credentials change.
+# After changes: kubectl apply -f prometheus/4.prometheus-configmap.yaml
+#                kubectl rollout restart deployment/prometheus-deployment -n monitoring
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: thanos-objstore-config
+  namespace: monitoring
+data:
+  objstore.yml: |
+    type: S3
+    config:
+      bucket: thanos
+      endpoint: rustfs-service.data.svc.cluster.local:9000
+      access_key: rustadmin
+      secret_key: rustadmin
+      insecure: true
+---
