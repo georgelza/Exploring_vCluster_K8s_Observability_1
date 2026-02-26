@@ -33,7 +33,7 @@ more about this in the local README.md's.
 Then we have three applications, all doing exactly the same, just in three languages, generating Prometheus metrics to be scraped.
 The apps also expose logs, but that is for another day -> ;) -> **Part 2**...
 
-Looking at what we have already, and whats planned with Part 2 it does provide a developer with a pretty complete development environment, with some good examples also.
+Looking at what we have already, and whats planned with **Part 2** it does provide a developer with a pretty complete development environment, with some good examples also.
 
 <img src="blog-doc/diagrams/SuperLabv4.0.png" alt="Our Build" width="450" height="350">
 
