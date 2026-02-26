@@ -14,10 +14,16 @@ This will be the first in a two part series.
 
 So this might not all make sense now, but as you deploy the stack the diagram will come clear.
 
-The project deploys multiple components making up a Observability stack, Prometheus, Grafana, Thanos for Federation, RustFS as Object store for Thanos, Traefik as Application Proxy. We have 2 inbound routes, Everything and RustFS (There are some hard coded values in the RustFS stack that stops us from using a path routing like what we will be doing for the other components).
+**... Note**, this Blog got a life of it's own, and well, got just a ...bit.. bigger than originally planned, but honestly don't mind, it's actually been a idea of me for some time. [vCluster](https://github.com/loft-sh/vcluster)  gave me the environment to do it in.
 
-Then we have three applications, all doing exactly the same, just in 3 languages, generating Prometheus metrics to be scraped.
+The project deploys multiple components making up a Observability stack, Prometheus, Grafana, Thanos for Federation, RustFS as Object store for Thanos, Traefik as Application Proxy. 
+
+We also ended having 2 inbound routes, Everything and RustFS (There are some hard coded values in the RustFS stack that stops us from using a path routing like what we will be doing for the other components).
+
+Then we have three applications, all doing exactly the same, just in three languages, generating Prometheus metrics to be scraped.
 The apps also expose logs, but that is for another day -> ;) -> Part 2...
+
+Looking at what we have already, and whats planned with Part 2 it does provide a developer with a pretty complete development environment, with some good examples also.
 
 <img src="blog-doc/diagrams/SuperLabv4.0.png" alt="Our Build" width="450" height="350">
 
@@ -58,6 +64,8 @@ Next See: `Deploy.md` - Which will go into a bit more detail on how to deploy th
 No Application, System, solution, however you want to name it, frame it should ever be deployed without a end to end Observability stack, Observability being when you collect analyse and visualize metrics and logs together. 
 
 You don't know what good and bad looks likes with proper metrics and logs. Observability is also critical when it comes to "FinOps" in that it defines if your system is over sized, it's also instrumental in predictive sizing, which leads to budgeting.
+
+As previously mentioned, this is not a complete project, it's part of the building blogs needed, example in the previous blog we used a nginx application, and we defined ingress rules onto it. Nothing stopping the developer from using those concepts and "marry" them with one of our three applications here to develop a API based application.
 
 
 ### vCluster Project Pages
