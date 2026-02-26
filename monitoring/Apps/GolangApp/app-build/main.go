@@ -63,44 +63,78 @@ func getEnvInt(key string, fallback int) int {
 }
 
 // ---------------------------------------------------------------------------
-// Structured logger – every line is a JSON object, AppName is always first
+// Structured logger – every line is a JSON object with guaranteed field order.
 // Column order: app | module | level | ts | event | <remaining fields>
+//
+// Go's encoding/json sorts map keys alphabetically — there's no way around it with map[string]interface{}.
+// We avoid this by building the JSON manually: the five header fields are
+// written first in the exact order we want, then extra fields are appended.
+// As we want to keep the order "as per the function defintion to assist with reading the log messages on a terminal"
+//
+// The fix introduces a logField struct (key + value pair) and builds a []logField slice instead.
+// The five header fields are inserted first in exact order, then extra fields are appended.
+// The JSON is then serialised manually key-by-key, bypassing the map entirely.
+// The one caveat worth knowing: the extra fields (after event) will still appear in map iteration order, which in Go is randomised per run.
+// If you need those ordered too, the call sites would need to pass an ordered slice rather than a map — but that's a bigger refactor.
+// The header (app → module → level → ts → event) is fully deterministic.
 // ---------------------------------------------------------------------------
+
+// logField is a single ordered key-value pair in the log record.
+type logField struct {
+	key string
+	val interface{}
+}
+
 func logEvent(appName, modName, level, event string, fields map[string]interface{}) {
-	record := map[string]interface{}{
-		"app":    appName,
-		"module": modName,
-		"level":  level,
-		"ts":     time.Now().UTC().Format(time.RFC3339),
-		"event":  event,
+	// Fixed header — order is guaranteed
+	ordered := []logField{
+		{"app", appName},
+		{"module", modName},
+		{"level", level},
+		{"ts", time.Now().UTC().Format(time.RFC3339)},
+		{"event", event},
 	}
 	for k, v := range fields {
-		record[k] = v
+		ordered = append(ordered, logField{k, v})
 	}
-	b, _ := json.Marshal(record)
-	fmt.Println(string(b))
+
+	// Serialise manually to preserve insertion order
+	buf := make([]byte, 0, 256)
+	buf = append(buf, '{')
+	for i, f := range ordered {
+		if i > 0 {
+			buf = append(buf, ',')
+		}
+		key, _ := json.Marshal(f.key)
+		val, _ := json.Marshal(f.val)
+		buf = append(buf, key...)
+		buf = append(buf, ':')
+		buf = append(buf, val...)
+	}
+	buf = append(buf, '}')
+	fmt.Println(string(buf))
 }
 
 // ---------------------------------------------------------------------------
 // Main
 // ---------------------------------------------------------------------------
 func main() {
-	appName     := getEnv("APP_NAME", "golang-prometheus-demo")
-	sleepMin    := getEnvFloat("SLEEP_MIN", 1.0)
-	sleepMax    := getEnvFloat("SLEEP_MAX", 5.0)
+	appName := getEnv("APP_NAME", "golang-prometheus-demo")
+	sleepMin := getEnvFloat("SLEEP_MIN", 1.0)
+	sleepMax := getEnvFloat("SLEEP_MAX", 5.0)
 	metricsPort := getEnvInt("METRICS_PORT", 8000)
 
 	maxRunRaw := getEnv("MAX_RUN", "")
-	maxRun    := 0
+	maxRun := 0
 	unlimited := true
 	if maxRunRaw != "" {
 		if v, err := strconv.Atoi(maxRunRaw); err == nil && v > 0 {
-			maxRun    = v
+			maxRun = v
 			unlimited = false
 		}
 	}
 
-	startTime    := time.Now()
+	startTime := time.Now()
 	startTimeStr := startTime.UTC().Format(time.RFC3339)
 
 	maxRunStr := "unlimited"
@@ -198,7 +232,7 @@ func main() {
 		sleepDuration := sleepMin + rand.Float64()*(sleepMax-sleepMin)
 		time.Sleep(time.Duration(sleepDuration * float64(time.Second)))
 
-		elapsed      := time.Since(loopStart).Seconds()
+		elapsed := time.Since(loopStart).Seconds()
 		totalRuntime := time.Since(startTime).Seconds()
 
 		// Random number 1-10
@@ -215,7 +249,7 @@ func main() {
 		pct := 0.0
 		pctStr := "n/a"
 		if !unlimited {
-			pct    = float64(loopCount) / float64(maxRun) * 100
+			pct = float64(loopCount) / float64(maxRun) * 100
 			pctStr = fmt.Sprintf("%.2f", pct)
 		}
 		pctComplete.Set(pct)

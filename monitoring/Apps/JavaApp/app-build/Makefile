@@ -37,6 +37,7 @@ build-push: build push
 ## Skips 04-servicemonitor.yaml if Prometheus Operator CRDs are not installed.
 k-apply:
 	@echo "Applying manifests with image: $(FULL_IMAGE)"
+	kubectl apply -f ../$(K8S_DIR)/00-namespace.yaml
 	kubectl apply -f ../$(K8S_DIR)/01-configmap.yaml
 	@sed 's|REPO_NAME/$(IMAGE_NAME):$(IMAGE_TAG)|$(FULL_IMAGE)|g' \
 		../$(K8S_DIR)/02-deployment.yaml | kubectl apply -f -

@@ -13,9 +13,11 @@ Basic Application that generate the 5 basic types of metrics that Prometheus man
 
 ## Building Application
 
+Because we don't expose, give the container access to the internet, it requires us to first do a go mod tidy in the app-build directory, to pull all the library files required. These are then used by make build and make push when building/compiling the application, creating our container image.
+
 ```bash
 cd app-build
-make tidy
+go mod tidy
 make build
 make push
 ```
