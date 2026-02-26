@@ -41,11 +41,11 @@ As mentioned above, I'm using [RustFS](https://rustfs.com) as object store, inst
 
 Time to find another Object Store... so here we go.
 
-This Blog follows two previous blogs where we introduced [vCluster](https://github.com/loft-sh/vcluster) as a base for localised [Kubernetes](https://kubernetes.io/) environment.
-
 BLOG: [Exploring K8S on vCluster, Deploying a Observability stack](???)
 
 GIT: [Exploring_vCluster_K8s_Observability_1](https://github.com/georgelza/Exploring_vCluster_K8s_Observability_1.git)
+
+This Blog follows on from my two previous blogs where we introduced the basics of [vCluster](https://github.com/loft-sh/vcluster) as a foundation for a localised [Kubernetes](https://kubernetes.io/) development environment and then a 2nd where we went a bit deeper, more complex examples.
 
 Previous Blogs, See: 
 
