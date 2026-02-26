@@ -80,3 +80,6 @@ cd monitoring/rustfs
 kubectl apply -f .
 ```
 
+## Thanos Aging metrics from Prometheus TSDB into RustFS, Thanos bucket
+
+<img src="../../blog-doc/diagrams/RustFS-ObjectStore.png" alt="Thanos objects" width="900" height="350">
