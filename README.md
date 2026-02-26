@@ -37,7 +37,7 @@ Looking at what we have already, and whats planned with **Part 2** it does provi
 
 <img src="blog-doc/diagrams/SuperLabv4.0.png" alt="Our Build" width="450" height="350">
 
-As mentioned above, I'm using [RustFS](https://rustfs.com) as object store, instead of the common MinIO, well because MinIO decided to walk away from everything thats open source, community driven and [Apache Foundation](https://www.apache.org) values based. 
+As mentioned above, I'm using [RustFS](https://rustfs.com) as object store, instead of the common MinIO object store, well because MinIO decided to walk away from everything thats open source, community driven and [Apache Foundation](https://www.apache.org) values based. 
 
 Time to find another Object Store... so here we go.
 
