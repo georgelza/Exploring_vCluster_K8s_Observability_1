@@ -2,52 +2,12 @@
 
 Below are the high level steps that we will be following.
 
-For each of the below see the local `README.md` file located in the specific directory:
+We got the deployment split into 2 parts.
 
-To deploy the stack you can execute the below command in each of the below directories
+1. Deploy Core vCluster/Kubernetes cluster environment, as documented in `Deploy_core.md`
 
-```bash
-kubectl apply -f .
-```
+2. Deploy our Observability stack, is documented in `Deploy_monitoring.md`
 
-1. Deploy monitoring/0.namespaces.yaml
-
-```bash
-kubectl get all namespaces
-```
-
-2. Deploy monitoring/1.rustfs
-
-```bash
-kubectl get all -n data -o wide
-```
-
-3. Deploy monitoring/2.thanos
-
-```bash
-# For all the below deployments you can monitor using the below command
-kubectl get all -n monitoring -o wide
-```
-
-4. Deploy monitoring/3.prometheus  (includes Alert Manager & enabling Kube-state-metrics)
-
-5. Deploy monitoring/4.node_export
-
-6. Deploy monitoring/5.grafana
-
-7. Test
-
-- kubectl port-forward service/rustfs-service 9001:9001 -n data
-- kubectl port-forward service/prometheus-service 9090:9090 -n monitoring 
-- kubectl port-forward service/alertmanager 9093:9093 -n monitoring 
-- kubectl port-forward service/thanos-query 9091:9090 -n monitoring 
-- kubectl port-forward service/grafana 3000:3000 -n monitoring 
-
-8. Deploy monitoring/6.traefik-ingress
-
-9. Deploy Various Demo Prometheus metric generating apps, see monitoring/7.Apps
-
-For now, first Read the `Deploy.md` in this same directory.
 
 
 ## Other online Examples covering similar stack
