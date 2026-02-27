@@ -118,6 +118,7 @@ This project gives you working examples of all the pieces. Take the ingress patt
 **Part 2** adds [Elasticsearch](https://www.elastic.co) for log analytics. Combined with the metrics stack from **Part 1**, you’ll have a complete observability platform — metrics, dashboards, alerting, long-term storage, and log search — all running locally on [vCluster](https://github.com/loft-sh/vcluster).
 
 
+All I cna say, interesting little explore.
 
 ### vCluster Project Pages
 
@@ -142,8 +143,6 @@ This project gives you working examples of all the pieces. Take the ingress patt
 And like that we’re done with our little trip down another Rabbit Hole, Till next time. 
 
 Thanks for following. 
-
-Whats next… Hmm, lets see, as per above, Part 2, lets take this stack a little further and add some Log Analytics capability by way of [Elastic](https://www.elastic.co).
 
 
 ### The Rabbit Hole
