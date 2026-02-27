@@ -2,89 +2,129 @@
 
 Welcome to [The Rabbit Hole](https://medium.com/@georgelza/list/the-rabbit-hole-0df8e3155e33)
 
-The idea, deploy a Observability stack on our [K8s](https://kubernetes.io/) cluster hosted on our [vCluster](https://github.com/loft-sh/vcluster) environment.
+When you’re building applications on Kubernetes, observability isn’t optional, it’s foundational. You need metrics to know if things are healthy, dashboards to spot trends, alerting to catch problems early, and long-term storage to answer questions about what happened last week or last month.
 
-This will be the first in a two part series. 
+In this two-part series, we’ll deploy a complete observability stack on a local Kubernetes cluster powered by [vCluster](https://github.com/loft-sh/vcluster). No cloud account required. No VMs. Just Docker and a few commands.
 
-### Overview
+- Part 1 (this post): [Prometheus](https://prometheus.io), [Grafana](https://grafana.com), [Thanos](https://thanos.io), [RustFS](https://rustfs.com), and [Traefik](https://traefik.io/traefik)
 
-- **Part 1** being the deployment of our base Monitoring stack comprised out of: [Prometheus](https://prometheus.io), [Grafana](https://grafana.com) and [Thanos](https://thanos.io), with [RustFS](https://rustfs.com) as backing object storage for Thanos, fronted by [Traefik](https://traefik.io/traefik) as Application Proxy and,
+- Part 2: Adding log analytics with [ElasticSearch](https://www.elastic.co)
 
-- **Part 2** in which we will be expanding our stack to include Log Analytics capabilities via [ElasticSearch](https://www.elastic.co).
+All source code is available at [georgelza/Exploring_vCluster_K8s_Observability_1](https://github.com/georgelza/Exploring_vCluster_K8s_Observability_1.git).
 
-So this might not all make sense now, but as you deploy the stack the diagram will come clear.
+### Why vCluster for This?
 
-**... Note**, this Blog developed a life of it's own, and well, got just a ...bit.. bigger than originally planned, but honestly don't mind, it's actually been a idea of mine for some time. [vCluster](https://github.com/loft-sh/vcluster) gave me the environment to do it all in now. Smilling!!!
+[vCluster](https://github.com/loft-sh/vcluster) with the Docker driver gives you a multi-node Kubernetes cluster running entirely in Docker containers. For this project, that means a control plane and three worker nodes  enough capacity to run the full observability stack alongside demo workloads  all created with a single command:
 
-The project deploys multiple components required for an Observability stack, Prometheus, Grafana, Thanos for Federation, RustFS as Object store for Thanos, Traefik as Application Proxy. 
+```bash
+vcluster create my-vc1 -f vcluster.yaml
+```
 
-We also ended having 2 inbound routes (wanted one...), first route via port 8080/<path> for everything (except =>) RustFS, it had to be different, it lives on :9001/rustfs. (There are some hard coded values in the RustFS stack that stops us from using a path routing like what we doing for the other components). 
+The `vcluster.yaml` configures a 3-worker-node cluster:
 
-Paths are:
+```yaml
+controlPlane:
+  distro:
+    k8s:
+      version: "v1.35.0"
+experimental:
+  docker:
+    nodes:
+    - name: "worker-1"
+    - name: "worker-2"
+    - name: "worker-3"
+```
 
-- :8080/prometheus
-- :8080/thanos
-- :8080/alertmanager
-- :8080/grafana 
-- :9001/rustfs
- 
-more about this in the local `README.md`'s.
-
-Then we have three example applications, all doing exactly the same job, generating [Prometheus](https://prometheus.io) metrics to be scraped:
-
-- python-prometheus-demo
-- java-prometheus-demo
-- golang-prometheys-demo
-  
-For these generated metrics I've included [Grafana](https://grafana.com) dashboard examples to visualize the metrics. see `monitoring/Dashboards.md`
-
-Then lastly, each above app also expose logs, but that is for another day -> ;) -> **Part 2**...
+That’s it. In under a minute, you have a fully functional Kubernetes cluster with multiple nodes, ready to host real workloads. When you’re done for the day, `vcluster pause my-vc1` frees up resources. `vcluster resume my-vc1` picks up right where you left off.
 
 
-Looking at what we have already, and whats planned with **Part 2** it does provide a developer with a pretty complete development environment, with some good examples also.
+### What We’re Deploying
+
+Here’s the full stack:
+
+### Component Breakdown
+
+```
+Component                   What It Does
+
+Prometheus                  Scrapes metrics from all workloads, nodes, and Kubernetes internals
+Alertmanager                Handles alerts triggered by Prometheus rules
+Thanos                      Provides long-term metric storage and a unified query layer across Prometheus instances
+RustFS                      S3-compatible object store that backs Thanos for durable metric retention
+Grafana                     Dashboards and visualization — connects to both Prometheus and Thanos as data sources
+Traefik                     Ingress proxy routing all UIs through a single entry point on port 8080
+```
 
 <img src="blog-doc/diagrams/SuperLabv4.0.png" alt="Our Build" width="450" height="350">
 
-As mentioned above, I'm using [RustFS](https://rustfs.com) as object store, instead of the common MinIO object store, well because MinIO decided to walk away from everything thats open source, community driven and [Apache Foundation](https://www.apache.org) values based. 
+### A Note on RustFS
 
-Time to find another Object Store... so here we go.
+You might be wondering why [RustFS](https://rustfs.com) instead of the more common MinIO. MinIO moved away from open-source licensing in a direction that doesn’t align with Apache Foundation values. RustFS is a drop-in S3-compatible replacement that stays true to open-source principles.
 
-BLOG: [Exploring K8S on vCluster, Deploying a Observability stack](???)
+[RustFS](https://rustfs.com) does have one quirk: its web console has hard-coded paths, so it runs on its own port (:9001/rustfs) rather than routing through Traefik alongside everything else.
 
-GIT: [Exploring_vCluster_K8s_Observability_1](https://github.com/georgelza/Exploring_vCluster_K8s_Observability_1.git)
+### Three Demo Applications
 
-This Blog follows on from my two previous blogs where we introduced the basics of [vCluster](https://github.com/loft-sh/vcluster) as a foundation for a localised [Kubernetes](https://kubernetes.io/) development environment and then a 2nd where we went a bit deeper, more complex examples.
+The stack includes three applications that generate custom Prometheus metrics — implemented in Python, Java, and Go:
 
-Previous Blogs, See: 
+```
+Application                 Language            Metrics Library
 
-1. [Exploring vCluster as solution to running K8S locally inside Docker](https://medium.com/@georgelza/exploring-vcluster-as-solution-to-running-k8s-locally-inside-docker-6ea233c67726)
-  
-2. [How to: Web apps on Kubernetes deployed on vCluster, configured with Traefik App Proxy and Ingress Controllers](https://medium.com/@georgelza/how-to-web-apps-on-kubernetes-deployed-on-vcluster-configured-with-traefik-app-proxy-and-ingress-c79cfea7111c)
+python-prometheus-demo      Python              prometheus_client
+java-prometheus-demo        Java                Micrometer
+golang-prometheus-demo      Go                  promhttp
+```
 
+All three do the same thing: expose an HTTP endpoint with custom metrics that Prometheus scrapes. This gives you real data flowing through the entire pipeline — from scrape to storage to dashboard.
 
-We'll be using the same [vCluster](https://github.com/loft-sh/vcluster) & [Kubernetes](https://kubernetes.io/) cluster deployment as per previous Blogs.
+Pre-built Grafana dashboards are included for each application. See monitoring/Dashboards.md for screenshots and import instructions.
+Each application also emits structured logs — that’s the foundation for Part 2 where we add Elasticsearch.
 
-Next See: `monitoring/README.md` - Which will go into a bit more detail on how to deploy the entire stack.
+### Deploying the Stack
 
+The deployment follows a specific order since components depend on each other:
 
-## Summary
+```
+namespaces → rustfs → thanos → prometheus → node-exporter → grafana → traefik → demo apps
+```
 
-No Application, System, solution, however you want to name it, frame it should ever be deployed without a end to end Observability stack, Observability being when you collect analyse and visualize metrics and logs together. 
+Each component, as per above can be deployed using `kubectl apply -f .` in the numbered directories found under `./monitoring`. Tear down is accomplished by executing `kubectl delete -f .` in the reverse order.
 
-You don't know what good and bad looks likes with proper metrics and logs. Observability is also critical when it comes to "FinOps" in that it defines if your system is over sized, it's also instrumental in predictive sizing, which leads to budgeting.
+For the complete step-by-step walkthrough, see `monitoring/README.md `and `monitoring/Deploy.md`.
 
-As previously mentioned, this is not a complete project, it's part of the building blogs needed, example in the previous blog we used a nginx application, and we defined ingress rules onto it. Nothing stopping the developer from using those concepts and "marry" them with one of our three applications here to develop a API based application.
+### The Bigger Picture
+
+This project is part of a series building up a complete local Kubernetes development environment:
+
+1. [Running K8s Locally with vCluster Inside Docker](https://medium.com/@georgelza/exploring-vcluster-as-solution-to-running-k8s-locally-inside-docker-6ea233c67726) — The foundation: setting up vCluster as a local dev environment
+
+2. [Web Apps on vCluster with Traefik and Ingress](https://medium.com/@georgelza/how-to-web-apps-on-kubernetes-deployed-on-vcluster-configured-with-traefik-app-proxy-and-ingress-c79cfea7111c) — Deploying applications with proper ingress routing
+
+3. Observability Stack, Part 1 (this post) — Metrics, dashboards, and long-term storage
+
+4. Observability Stack, Part 2 (coming next) — Log analytics with Elasticsearch
+
+By the end of the series, you have a local environment with application hosting, ingress routing, metrics collection, dashboarding, alerting, long-term metric storage, and log analytics. That’s a genuinely useful development platform — and it all runs on your laptop.
+
+## Why Observability Matters
+
+No system should go to production without end-to-end observability. You need metrics and logs working together to understand what’s happening. Without them, you don’t know what “good” looks like, which means you can’t spot when things go bad.
+Observability also drives FinOps — it tells you whether your system is oversized, feeds into capacity planning, and informs budgeting. It’s not just an engineering concern; it’s a business one.
+
+This project gives you working examples of all the pieces. Take the ingress patterns from the earlier posts, combine them with the demo applications and monitoring stack here, and you have the building blocks for a real application with proper observability baked in from day one.
+
+## What’s Next
+
+**Part 2** adds [Elasticsearch](https://www.elastic.co) for log analytics. Combined with the metrics stack from **Part 1**, you’ll have a complete observability platform — metrics, dashboards, alerting, long-term storage, and log search — all running locally on [vCluster](https://github.com/loft-sh/vcluster).
+
 
 
 ### vCluster Project Pages
 
 - [vCluster](https://github.com/loft-sh/vcluster)
-
 - [Full Quickstart Guide](https://www.vcluster.com/docs/vcluster/#deploy-vcluster)
-
-- [Slack Seerver](https://slack.loft.sh/)
-
-- [VIND](https://github.com/loft-sh/vind)
+- [Slack Server](https://slack.loft.sh/)
+- [VIND, vCluster in Docker](https://github.com/loft-sh/vind)
 
 
 ### Supporting Background Information

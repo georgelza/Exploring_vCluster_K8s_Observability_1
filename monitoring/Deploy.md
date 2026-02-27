@@ -8,6 +8,7 @@ See `vcluster.yaml`
 sudo vcluster create my-vc1 --values vcluster.yaml
 ```
 
+
 ## Step 2. Verify it's working
 
 ```bash
@@ -55,42 +56,27 @@ Enough talkng, **LETS Deploy**, Start by reading `monitoring/Deploy.md`, after w
 
 
 ```
+monitoring/
+|
+├── 0.namespaces.yaml
 ├── Dashboards.md
 ├── Deploy.md     <- This file
-├── deploy.sh
-├── namespaces.yaml
 ├── README.md     
-├── teardown.sh
 |
-├── Apps/
-|   ├── PythonApp/
-|   |   ├── app-build/
-|   |   ├── k8s-deploy/
-│   |   └── README.md
-|   ├── JavaApp/
-|   |   ├── app-build/
-|   |   ├── k8s-deploy/
-│   |   └── README.md
-|   ├── GolangApp/
-|   |   ├── app-build/
-|   |   ├── k8s-deploy/
-│   |   └── README.md
-│   └── README.md
-|
-├── rustfs/
+├── 1.rustfs/
 │   ├── 1.rustfs-secret.yaml
 │   ├── 2.rustfs-volumes.yaml
 │   ├── 3.rustfs-deployment-tcp-probes.yaml
 |   ├── 4.rustfs-service.yaml 
 │   └── README.md
 |
-├── thanos/
+├── 2.thanos/
 │   ├── 1.thanos-create-bucket.yml
 │   ├── 2.thanos-configmap.yaml
 │   ├── 3.thanos-deploy.yaml
 │   └── README.md
 |
-├── prometheus/
+├── 3.prometheus/
 │   ├── 1.prometheus-clusterrole.yaml
 │   ├── 2.prometheus-volumes.yaml
 │   ├── 3.prometheus-configmap.yaml
@@ -102,19 +88,35 @@ Enough talkng, **LETS Deploy**, Start by reading `monitoring/Deploy.md`, after w
 │   ├── 9.kube-state-metrics.yaml    
 │   └── README.md
 |
-├── node_exporter/
+├── 4.node_exporter/
 │   ├── 0.node-exporter.yaml
 │   └── README.md
 |
-├── grafana/
+├── 5.grafana/
 │   ├── 1.grafana-volumes.yaml
 │   ├── 2.grafana-configmap.yaml
 │   ├── 3.grafana-deploy.yaml
 │   ├── 4.grafana-service.yaml
 │   └── README.md
 |
-└── traefik-ingress/
-    ├── 1.traefik-deploy.yaml
-    ├── 2.traefik-deploy-services.yaml
+├── 6.traefik-ingress/
+|   ├── 1.traefik-deploy.yaml
+|   ├── 2.traefik-deploy-services.yaml
+|   └── README.md
+|
+└── 7.Apps/
+    ├── PythonApp/
+    |   |   ├── app-build/
+    |   ├── k8s-deploy/
+    |   └── README.md
+    ├── JavaApp/
+    |   ├── app-build/
+    |   ├── k8s-deploy/
+    |   └── README.md
+    ├── GolangApp/
+    |   ├── app-build/
+    |   ├── k8s-deploy/
+    |   └── README.md
     └── README.md
+
 ```
