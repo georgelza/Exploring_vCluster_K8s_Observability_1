@@ -28,10 +28,18 @@ Paths are:
 - :8080/grafana 
 - :9001/rustfs
  
-more about this in the local README.md's.
+more about this in the local `README.md`'s.
 
-Then we have three applications, all doing exactly the same, just in three languages, generating Prometheus metrics to be scraped.
-The apps also expose logs, but that is for another day -> ;) -> **Part 2**...
+Then we have three example applications, all doing exactly the same job, generating [Prometheus](https://prometheus.io) metrics to be scraped:
+
+- python-prometheus-demo
+- java-prometheus-demo
+- golang-prometheys-demo
+  
+For these generated metrics I've included [Grafana](https://grafana.com) dashboard examples to visualize the metrics. see `monitoring/Dashboards.md`
+
+Then lastly, each above app also expose logs, but that is for another day -> ;) -> **Part 2**...
+
 
 Looking at what we have already, and whats planned with **Part 2** it does provide a developer with a pretty complete development environment, with some good examples also.
 
@@ -56,19 +64,7 @@ Previous Blogs, See:
 
 We'll be using the same [vCluster](https://github.com/loft-sh/vcluster) & [Kubernetes](https://kubernetes.io/) cluster deployment as per previous Blogs.
 
-
-## Deployment and Building Our Examples
-
-We have this **README.md** files, covering the overview and then **Deploy.md** covering the high level deployment. The more detail regarding our deployment of our monitoring stacks is covered in **README.md** files located in each of the subdirectories under the `monitoring/*` directory.
-
-We also have three [Prometheus](https://prometheus.io) metric data generators in the form of [Python](https://www.python.org), [Java](https://www.java.com/en/) and [Golang](https://go.dev) applications, in addition to [Grafana](https://grafana.com) dashboards to visualize the generated metrics. 
-
-See: `monitoring/Apps/README.md`,
-
-
-Next See: `Deploy.md` - Which will go into a bit more detail on how to deploy the entire stack.
-
-For Examples of the Grafana Dashboards created, art of the possible, see `DASHBOARD.md`
+Next See: `monitoring/README.md` - Which will go into a bit more detail on how to deploy the entire stack.
 
 
 ## Summary

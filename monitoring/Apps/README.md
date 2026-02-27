@@ -49,7 +49,7 @@ See the sub directory for the relevant `README.md` for more information
    |   ├── k8s-deploy/
    |   └── README.md
    |
-   └── README.md
+   └── README.md     <- This file
 ```
 
 ## Verifying deployment
@@ -58,7 +58,10 @@ See the sub directory for the relevant `README.md` for more information
 
 **Option 1**
 
+```bash
+# Python App as Example, see local README.md
 kubectl port-forward -n prometheus-demo deployment/python-prometheus-demo 8000:8000
+```
 
 Then in a second terminal
 
@@ -90,6 +93,7 @@ You should see JSON lines with event: startup followed by event: loop_tick every
 ```bash
 kubectl describe pod -n prometheus-demo -l app.kubernetes.io/name=python-prometheus-demo
 ```
+
 Look for the `Environment Variables from` section confirming `python-prometheus-demo-config` is mounted, and `Events` at the bottom for any pull/start errors.
 
 

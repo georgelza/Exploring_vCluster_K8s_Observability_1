@@ -49,15 +49,18 @@ So I'm using [Manifest](https://en.wikipedia.org/wiki/Manifest_file) files on pu
 
 Nothing stopping you from doing the below using one of the various [HELM](https://helm.sh) deploy guides. I actually include some references in `monitoring/README.md `for deploying the stack using HELM chart deployment option.
 
-NOTE: [Traefik](https://traefik.io/traefik) was deployed at the cluster build using an [HELM](https://helm.sh) chart.
+**NOTE**: [Traefik](https://traefik.io/traefik) was deployed above as part of the cluster build using an [HELM](https://helm.sh) chart.
 
-Next See: **monitoring/README.md** for more detail.
+Enough talkng, **LETS Deploy**, Start by reading `monitoring/Deploy.md`, after which each of the subdirectories below as show you will notice include a `README.md`.
+
 
 ```
+├── Dashboards.md
+├── Deploy.md     <- This file
 ├── deploy.sh
-├── teardown.sh
 ├── namespaces.yaml
-├── README.md
+├── README.md     
+├── teardown.sh
 |
 ├── Apps/
 |   ├── PythonApp/

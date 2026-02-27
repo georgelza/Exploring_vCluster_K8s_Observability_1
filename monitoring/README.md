@@ -1,5 +1,7 @@
 ## Deploying our K8S Observability stack
 
+Below are the high level steps that we will be following.
+
 For each of the below see the local `README.md` file located in the specific directory:
 
 1. Deploy monitoring/namespaces.yaml
@@ -26,8 +28,10 @@ For each of the below see the local `README.md` file located in the specific dir
 
 9. Deploy Various Demo Prometheus metric generating apps, see monitoring/Apps
 
+For now, first Read the `Deploy.md` in this same directory.
 
-## Background Reading
+
+## Other online Examples covering similar stack
 
 - [Deploy Prometheus and Grafana on Kubernetes using Helm](https://medium.com/@gayatripawar401/deploy-prometheus-and-grafana-on-kubernetes-using-helm-5aa9d4fbae66)
 - [How to Integrate Prometheus and Grafana on Kubernetes Using Helm](https://semaphore.io/blog/prometheus-grafana-kubernetes-helm)
