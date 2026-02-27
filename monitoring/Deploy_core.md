@@ -2,11 +2,17 @@
 
 ## Step 1. Create a vCluster in Docker (automatically connects)
 
+Pre Deployment
+
+<img src="../my-vc1/0.0.docker_ps.png" alt="Pre Deployment" width="950" height="70">
+
+
 ```bash
 # while located in the monitoring directory, execute
 
 sudo vcluster create my-vc1 --values vcluster.yaml
 ```
+<img src="../my-vc1/0.1.k8s_create.png" alt="Creating my-vc1" width="950" height="200">
 
 ## Step 2. Verify it's working
 
@@ -14,18 +20,24 @@ sudo vcluster create my-vc1 --values vcluster.yaml
 kubectl get nodes
 kubectl get namespaces
 ```
+<img src="../my-vc1/0.2.get_nodes.png" alt="Kubectl-get-nodes" width="950" height="100">
+
+<img src="../my-vc1/0.3.get_namespaces.png" alt="Kubectl-get-namespaces" width="950" height="100">
+
 
 Lets Label our nodes correctly, little attention to detail
 
 ```bash
 kubectl label node worker-1 worker-2 worker-3 node-role.kubernetes.io/worker=worker
 ```
+<img src="../my-vc1/0.4.label_nodes.png" alt="Kubectl-get-namespaces" width="950" height="100">
 
 Notice the difference.
 
 ```bash
 kubectl get nodes
 ```
+<img src="../my-vc1/0.5.get_nodes.png" alt="Kubectl-get-nodes" width="950" height="100">
 
 
 ## STEP 3: Install Traefik open-source HTTP Application/Reverse proxy 
@@ -39,6 +51,8 @@ helm upgrade --install traefik1 traefik \
   --set service.type=ClusterIP \
   --set ingressClass.name=traefik1
 ```
+<img src="../my-vc1/0.6.helm_install_traefik.png" alt="HELM Deploy" width="950" height="250">
+
 
 By using a ClusterIP it allows us to run one kubectl port-forward onto the cluster, through which we can then access all the services exposed.
 
