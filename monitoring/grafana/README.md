@@ -11,9 +11,11 @@ Grafana is the visualisation layer. It queries Thanos Query (which fans out to b
 ### Datasource
 
 Thanos Query is auto-provisioned as the default datasource on startup via ConfigMap. The URL points to:
+
 ```
 http://thanos-query.monitoring.svc.cluster.local:9090
 ```
+
 This means all queries go through Thanos, giving you both real-time and historical data in the same dashboard.
 
 ### Dashboard
@@ -27,6 +29,7 @@ Dashboard **18283** (Kubernetes All-in-One Cluster Monitoring) is imported manua
 ### Sub-path Configuration
 
 Grafana is served at `/grafana` via environment variables:
+
 - `GF_SERVER_ROOT_URL` — tells Grafana its public URL includes `/grafana`
 - `GF_SERVER_SERVE_FROM_SUB_PATH=true` — enables sub-path serving
 
@@ -35,6 +38,7 @@ No Traefik strip middleware needed — Grafana handles the prefix itself.
 ### Storage
 
 hostPath PV on whichever node the pod is scheduled:
+
 - Path: `/data/grafana` (5Gi)
 - Persists dashboards, users, and settings across pod restarts
 - An initContainer runs as root to fix permissions before the grafana user (472) starts
@@ -42,6 +46,7 @@ hostPath PV on whichever node the pod is scheduled:
 ### Grafana No-Data Troubleshooting
 
 If dashboards show "No data":
+
 1. Go to **Connections → Data Sources** → verify Thanos datasource is green
 2. On dashboard 18283, check the **cluster** variable dropdown shows `my-vc1`
 3. If dropdown is empty: **Dashboard Settings → Variables** → confirm datasource is set to `Thanos` (not Prometheus)

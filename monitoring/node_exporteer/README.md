@@ -1,7 +1,7 @@
 
 ## What are Prometheus Exporters
 
-Prometheus exporters are specialized agents that collect metrics from third-party systems, applications, or infrastructure that do not natively support Prometheus, converting them into a format Prometheus can scrape and store. They act as intermediaries, exposing metrics via an HTTP endpoint (usually /metrics) to enable monitoring of databases, hardware, and services. 
+[Prometheus exporters](https://prometheus.io/docs/instrumenting/exporters/) are specialized agents that collect metrics from third-party systems, applications, or infrastructure that do not natively support Prometheus, converting them into a format Prometheus can scrape and store. They act as intermediaries, exposing metrics via an HTTP endpoint (usually /metrics) to enable monitoring of databases, hardware, and services. 
 
 **Key Aspects of Prometheus Exporters:**
 
@@ -26,7 +26,7 @@ Exporters are essential for achieving comprehensive observability across a tech 
 
 ### What is Node_Exporter
 
-The Prometheus Node Exporter is a lightweight, open-source agent that collects hardware and OS-level metrics (CPU, memory, disk, network) from Linux and Unix-based systems. It exposes these metrics via an HTTP endpoint, allowing Prometheus to scrape and store them for monitoring infrastructure health and performance. 
+The Prometheus [Node Exporter](https://prometheus.io/docs/guides/node-exporter/) is a lightweight, open-source agent that collects hardware and OS-level metrics (CPU, memory, disk, network) from Linux and Unix-based systems. It exposes these metrics via an HTTP endpoint, allowing Prometheus to scrape and store them for monitoring infrastructure health and performance. 
 
 **Key Details About Node Exporter:**
 
@@ -51,6 +51,6 @@ A couple of notes on why DaemonSet instead of a single pod:Node exporter needs t
 - 15172
 - 13978
 
-### Further Rading
+### Further Reading
 
 [System Monitoring with Prometheus, Grafana, and Node Exporter](https://medium.com/@DanialEskandari/system-monitoring-with-prometheus-grafana-and-node-exporter-412027684564)

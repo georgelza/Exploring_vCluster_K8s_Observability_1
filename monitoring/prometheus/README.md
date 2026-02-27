@@ -28,6 +28,7 @@ kubectl apply -f .
 kubectl get all -n monitor
 ```
 
+```
 prometheus/
 ├── 1.prometheus-clusterrole.yaml
 ├── 2.prometheus-volumes.yaml
@@ -44,7 +45,7 @@ prometheus/
 ├── AM_README.md
 ├── PM_README.md
 └── README.md
-
+```
 
 ## Adding Pods and Nodes to environment
 

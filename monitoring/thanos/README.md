@@ -2,7 +2,11 @@
 
 ### What it is
 
-Thanos extends Prometheus with long-term storage and global query capability. It consists of four components in this stack:
+[Thanos](https://thanos.io) extends Prometheus with long-term storage and global query capability.
+
+[Thanos](https://thanos.io) is an open-source CNCF project that extends Prometheus - Monitoring to create a highly available, global-querying, and long-term storage monitoring system. It runs alongside Prometheus, utilizing object storage (e.g., S3, GCS) for data retention, while allowing you to query multiple Prometheus instances from one place.
+
+It consists of four components in this stack:
 
 ```
 Prometheus Pod

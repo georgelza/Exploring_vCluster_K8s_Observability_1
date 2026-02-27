@@ -1,10 +1,11 @@
-## RustFS
+## RustFS S3 Object store
 
 ### What it is
 
 RustFS is a Rust-based S3-compatible object store (similar to MinIO). It serves two roles in this stack:
 
 1. **S3 API (port 9000)** — used by the Thanos sidecar to ship Prometheus TSDB blocks every 2h, and by Thanos Store Gateway and Compactor to read historical data
+   
 2. **Console UI (port 9001)** — a Next.js web UI for browsing buckets and objects
 
 ### Namespace
@@ -32,19 +33,22 @@ A `thanos` bucket is created at deploy time by a one-off Job (`thanos/1.thanos-c
 ### Known Limitations
 
 - Running as `runAsUser: 0` (root) — required by this alpha build
+
 - Using TCP probes instead of HTTP probes — the HTTP health endpoint is not reliable in this alpha version
+
 - Console UI (`1.0.0-alpha.83`) has a redirect bug where it issues a bare `/browser` redirect instead of `/rustfs/console/browser`, causing a redirect loop in Chrome/Safari. **Use Firefox** to access the console
 
 ### Access
 
 Via Traefik port-forward on port 9001:
 
-```
+```bash
 kubectl port-forward service/traefik1 -n ingress-traefik1 9001:9001
 http://localhost:9001/rustfs/console/index.html   ← Firefox only
 ```
 
 S3 API is available internally at:
+
 ```
 http://rustfs-service.data.svc.cluster.local:9000
 ```
