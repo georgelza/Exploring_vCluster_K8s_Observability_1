@@ -78,7 +78,7 @@ As you will see, each directory is numbered, defining the deployment order. Each
 
 ```bash
 # in monitoring directory
-kubectl apply -f .
+kubectl apply 0.namespaces.yaml
 kubectl get namespaces
 ```
 
