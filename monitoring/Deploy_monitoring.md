@@ -58,15 +58,18 @@ As you will see, each directory is numbered, defining the deployment order. Each
 |
 └── 7.Apps/
     ├── PythonApp/
-    |   |   ├── app-build/
+    |   ├── app-build/
+    |   ├── dashboard/
     |   ├── k8s-deploy/
     |   └── README.md
     ├── JavaApp/
     |   ├── app-build/
+    |   ├── dashboard/
     |   ├── k8s-deploy/
     |   └── README.md
     ├── GolangApp/
     |   ├── app-build/
+    |   ├── dashboard/
     |   ├── k8s-deploy/
     |   └── README.md
     └── README.md
