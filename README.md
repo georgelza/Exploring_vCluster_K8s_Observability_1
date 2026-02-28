@@ -121,7 +121,7 @@ For the complete step-by-step walkthrough, start with  `monitoring/README.md`.
 - The Core is our Generic vCluster/Kubernetes Cluster and our Traefik Application Proxy. see `monitoring/Deploy_core.md`
 - The Monitoring deployment then deploys our stack as per above onto our core Kubernetes cluster. see `monitoring/Deploy_monitoring.md`
 
-See `mv-vc1/*` for screengrabs of each step executed and terminal output.
+See `mv-vc1/*` for screengrabs of each step executed and terminal output, additionally `monitoring/Dashboards.md` have example **node_exporter** and **Kubernetes** Grafana dashboards.
 
 
 ## What’s Next
