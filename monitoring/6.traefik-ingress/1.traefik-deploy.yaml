@@ -1,3 +1,11 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Traefik Ingress for monitoring stack
+# Namespace: ingress-traefik1
+#
+# This deploys the Traefik Deployment and Service.
+#
+# ─────────────────────────────────────────────────────────────────────────────
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
