@@ -80,19 +80,8 @@ All three do the same thing: expose an HTTP endpoint with custom metrics that Pr
 Pre-built Grafana dashboards are included for each application. See monitoring/Dashboards.md for screenshots and import instructions.
 Each application also emits structured logs — that’s the foundation for Part 2 where we add Elasticsearch.
 
-### Deploying the Stack
 
-The deployment follows a specific order since components depend on each other:
-
-```
-namespaces → rustfs → thanos → prometheus → node-exporter → grafana → traefik → demo apps
-```
-
-Each component, as per above can be deployed using `kubectl apply -f .` in the numbered directories found under `./monitoring`. Tear down is accomplished by executing `kubectl delete -f .` in the reverse order.
-
-For the complete step-by-step walkthrough, see `monitoring/README.md `and `monitoring/Deploy.md`.
-
-### The Bigger Picture
+## The Bigger Picture
 
 This project is part of a series building up a complete local Kubernetes development environment:
 
@@ -113,12 +102,32 @@ Observability also drives FinOps — it tells you whether your system is oversiz
 
 This project gives you working examples of all the pieces. Take the ingress patterns from the earlier posts, combine them with the demo applications and monitoring stack here, and you have the building blocks for a real application with proper observability baked in from day one.
 
+## Deploying the Stack
+
+The deployment follows a specific order since components depend on each other:
+
+```
+namespaces → rustfs → thanos → prometheus → node-exporter → grafana → traefik → demo apps
+```
+
+Each component, as per above can be deployed using `kubectl apply -f .` in the numbered directories found under `./monitoring`. Tear down is accomplished by executing `kubectl delete -f .` in the reverse order.
+
+### Deployment Steps
+
+The deployment has been divided into 2 sections, Core deployment and Monitoring deployment.
+
+For the complete step-by-step walkthrough, start with  `monitoring/README.md`.
+
+- The Core is our Generic vCluster/Kubernetes Cluster and our Traefik Application Proxy. see `monitoring/Deploy_core.md`
+- The Monitoring deployment then deploys our stack as per above onto our core Kubernetes cluster. see `monitoring/Deploy_monitoring.md`
+
+
 ## What’s Next
 
 **Part 2** adds [Elasticsearch](https://www.elastic.co) for log analytics. Combined with the metrics stack from **Part 1**, you’ll have a complete observability platform — metrics, dashboards, alerting, long-term storage, and log search — all running locally on [vCluster](https://github.com/loft-sh/vcluster).
 
 
-All I cna say, interesting little explore.
+All I can say, interesting little explore.
 
 ### vCluster Project Pages
 
