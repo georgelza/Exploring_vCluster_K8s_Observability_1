@@ -12,7 +12,7 @@ As you will see, each directory is numbered, defining the deployment order. Each
 ├── 0.namespaces.yaml
 ├── Dashboards.md
 ├── Deploy_core.md
-├── Deploy_medium.md     <- This file
+├── Deploy_monitoring.md     <- This file
 ├── README.md     
 |
 ├── 1.rustfs/
