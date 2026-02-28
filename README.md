@@ -112,7 +112,7 @@ namespaces → rustfs → thanos → prometheus → node-exporter → grafana �
 
 Each component, as per above can be deployed using `kubectl apply -f .` in the numbered directories found under `./monitoring`. Tear down is accomplished by executing `kubectl delete -f .` in the reverse order.
 
-### Deployment Steps
+### Step by step
 
 The deployment has been divided into 2 sections, Core deployment and Monitoring deployment.
 
@@ -121,13 +121,14 @@ For the complete step-by-step walkthrough, start with  `monitoring/README.md`.
 - The Core is our Generic vCluster/Kubernetes Cluster and our Traefik Application Proxy. see `monitoring/Deploy_core.md`
 - The Monitoring deployment then deploys our stack as per above onto our core Kubernetes cluster. see `monitoring/Deploy_monitoring.md`
 
+See `mv-vc1/*` for screengrabs of each step executed and terminal output.
+
 
 ## What’s Next
 
 **Part 2** adds [Elasticsearch](https://www.elastic.co) for log analytics. Combined with the metrics stack from **Part 1**, you’ll have a complete observability platform — metrics, dashboards, alerting, long-term storage, and log search — all running locally on [vCluster](https://github.com/loft-sh/vcluster).
 
 
-All I can say, interesting little explore.
 
 ### vCluster Project Pages
 
@@ -159,7 +160,7 @@ Thanks for following.
 <img src="blog-doc/diagrams/rabbithole.jpg" alt="Our Build" width="450" height="350">
 
 
-## ABOUT ME
+### ABOUT ME
 
 I’m a techie, a technologist, always curious, love data, have for as long as I can remember always worked with data in one form or the other, Database admin, Database product lead, data platforms architect, infrastructure architect hosting databases, backing it up, optimizing performance, accessing it. Data data data… it makes the world go round.
 In recent years, pivoted into a more generic Technology Architect role, capable of full stack architecture.
