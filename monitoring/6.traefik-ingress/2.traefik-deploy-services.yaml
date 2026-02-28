@@ -3,11 +3,25 @@
 # Namespace: ingress-traefik1
 #
 # Entrypoints:
-#   web     :8000 (container) / :80 (service)   → /prometheus, /grafana, /alertmanager, /thanos
-#     kubectl port-forward service/traefik1 -n ingress-traefik1 8080:80
 #
-#   rustfs  :9001 (container) / :9001 (service) → rustfs console UI (served at root)
-#     kubectl port-forward service/traefik1 -n ingress-traefik1 9001:9001
+# All routes accessible via:
+#
+#   kubectl port-forward service/traefik1 -n ingress-traefik1 8080:80
+#
+#   http://localhost:8080/<route>
+#
+#   http://localhost:8080/prometheus      → Prometheus
+#   http://localhost:8080/grafana         → Grafana
+#   http://localhost:8080/alertmanager    → Alertmanager
+#   http://localhost:8080/thanos          → Thanos Query
+#   http://localhost:8080/rustfs          → RustFS S3 API, althoug it is used internall primarily, 
+#                                           If the RustFS API is required externally, it can be utilized via this route, as part 
+#                                           of the current port-forwarding setup.
+#
+#   kubectl port-forward service/traefik1 -n ingress-traefik1 9001:9001
+#
+#   http://localhost:9001/                → RustFS Console UI
+#
 # ─────────────────────────────────────────────────────────────────────────────
 
 # ── Strip-prefix middlewares ──────────────────────────────────────────────────
