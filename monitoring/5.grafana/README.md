@@ -106,7 +106,8 @@ kubectl apply -f .
 
 ### Example Dashboards / Configuring Grafana Dashboard
 
--- 18283 or 15661
+- 18283
+- 15661
 
 Datasource : for 18283 point both:
 

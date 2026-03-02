@@ -48,8 +48,6 @@ A couple of notes on why DaemonSet instead of a single pod:Node exporter needs t
 ### Pre Build Grafana Dashboards -> node_exporter
 
 - 1860
-- 15172
-- 13978
 
 ### Further Reading
 
