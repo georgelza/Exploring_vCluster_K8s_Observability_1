@@ -123,6 +123,14 @@ For the complete step-by-step walkthrough, start with  `monitoring/README.md`.
 
 See `mv-vc1/*` for screengrabs of each step executed and terminal output, additionally `monitoring/Dashboards.md` have example **node_exporter** and **Kubernetes** Grafana dashboards.
 
+Core Deployment: 
+
+```bash
+git clone https://github.com/georgelza/Exploring_vCluster_K8s_Observability_1.git
+cd monitoring
+```
+
+
 
 ## What’s Next
 
